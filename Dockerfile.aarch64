@@ -11,7 +11,7 @@ ARG L4T_VERSION=r36.2.0
 # prepare basic build environment
 FROM dustynv/l4t-pytorch:${L4T_VERSION} AS base
 ARG CUDA_VERSION=12.2.1
-ARG PYTHON_VERSION=3.12
+ARG PYTHON_VERSION=3.10
 ENV DEBIAN_FRONTEND=noninteractive
 
 # Install Python and other dependencies
@@ -61,7 +61,7 @@ RUN --mount=type=cache,target=/root/.cache/pip \
 RUN python3 -m pip install packaging
 
 RUN --mount=type=cache,target=/root/.cache/pip \
-    git clone https://github.com/triton-lang/triton ; cd triton/python ; git submodule update --init --recursive ;  pip --verbose wheel -w /workspace/vllm-aarch64-whl .
+    git clone -b release/3.1.x https://github.com/triton-lang/triton ; cd triton/python ; git submodule update --init --recursive ;  pip --verbose wheel -w /workspace/vllm-aarch64-whl .
 
 # Needed to ensure causal-conv1d builds from scratch
 ENV CAUSAL_CONV1D_FORCE_BUILD=TRUE
@@ -162,9 +162,9 @@ RUN --mount=type=cache,target=/root/.cache/pip \
 #################### DEV IMAGE ####################
 #################### vLLM installation IMAGE ####################
 # image with vLLM installed
-FROM dustynv/l4t-pytorch:${L4T_VERSION} AS base
+FROM dustynv/l4t-pytorch:${L4T_VERSION} AS vllm-base
 ARG CUDA_VERSION=12.2.1
-ARG PYTHON_VERSION=3.12
+ARG PYTHON_VERSION=3.10
 WORKDIR /vllm-workspace
 ENV DEBIAN_FRONTEND=noninteractive
 
@@ -197,9 +197,9 @@ RUN --mount=type=bind,from=build,src=/workspace/dist,target=/vllm-workspace/dist
     --mount=type=cache,target=/root/.cache/pip \
     python3 -m pip install dist/*.whl --verbose
 
-RUN --mount=type=cache,target=/root/.cache/pip \
-    . /etc/environment && \
-    python3 -m pip install https://github.com/flashinfer-ai/flashinfer/releases/download/v0.1.6/flashinfer-0.1.6+cu121torch2.4-cp${PYTHON_VERSION_STR}-cp${PYTHON_VERSION_STR}-linux_x86_64.whl
+RUN --mount=type=bind,from=base,src=/workspace/vllm-aarch64-whl,target=/workspace/vllm-aarch64-whl \
+    --mount=type=cache,target=/root/.cache/pip \
+    python3 -m pip install /workspace/vllm-aarch64-whl/*.whl --no-deps --no-cache-dir
 #################### vLLM installation IMAGE ####################
 
 
