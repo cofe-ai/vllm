@@ -52,6 +52,7 @@ _PP_SUPPORTED_MODELS = [
     "Qwen2MoeForCausalLM",
     "QWenLMHeadModel",
     "Qwen2VLForConditionalGeneration",
+    "TeleFLMForCausalLM",
 ]
 
 
