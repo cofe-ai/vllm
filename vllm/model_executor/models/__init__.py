@@ -55,6 +55,7 @@ _GENERATION_MODELS = {
     "PhiMoEForCausalLM": ("phimoe", "PhiMoEForCausalLM"),
     "Qwen2ForCausalLM": ("qwen2", "Qwen2ForCausalLM"),
     "Qwen2MoeForCausalLM": ("qwen2_moe", "Qwen2MoeForCausalLM"),
+    "TeleFLMForCausalLM": ("teleflm", "TeleFLMForCausalLM"),
     "Qwen2VLForConditionalGeneration":
     ("qwen2_vl", "Qwen2VLForConditionalGeneration"),
     "RWForCausalLM": ("falcon", "FalconForCausalLM"),
