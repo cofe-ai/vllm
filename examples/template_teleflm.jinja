@@ -2,7 +2,7 @@
     {% if message['role'] == 'user' %}
         {{ '<_user>' + message['content'].strip() + '<_bot>' }}
     {% elif message['role'] == 'system' %}
-        {{ '' }}
+        {{ '<_system>' + message['content'].strip()}}
     {% elif message['role'] == 'assistant' %}
         {{ message['content'] }}
     {% endif %} 
